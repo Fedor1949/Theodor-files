@@ -1,40 +1,92 @@
-<!--
-This script was written on codepen Jon Kantner
-I've added this to JS IDE for showcase
-purpose, so all credits goes to him
--->
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>3D Preloader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Varela+Round&amp;display=swap'>
-  <style>
-      * {
-  border: 0;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+    <meta charset="UTF-8">
+    <title>Холст с панелью управления</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #control-panel {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #control-panel label {
+            margin-right: 10px;
+        }
+        canvas {
+            border: 2px solid #33;
+            background-color: #ff0;
+        }
+    </style>
+</head>
+<body>
 
-:root {
-  --bg: #454954;
-  --fg: #e3e4e8;
-  --fg-t: rgba(227, 228, 232, 0.5);
-  --primary1: #255ff4;
-  --primary2: #5583f6;
-  --trans-dur: 0.3s;
-  font-size: calc(16px + (20 - 16) * (100vw - 320px) / (1280 - 320));
-}
+<div id="control-panel">
+    <label for="sizeSlider">Размер:</label>
+    <input type="range" id="sizeSlider" min="10" max="200" value="50">
+    <span id="sizeValue">50</span>
 
-body {
-  background-color: var(--bg);
-  background-image: linear-gradient(135deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
-  color: var(--fg);
-  font: 1em/1.5 "Varela Round", Helvetica, sans-serif;
-  height: 100vh;
-  min-height: 360px;
+    <button id="colorButton">Сменить цвет</button>
+</div>
+
+<canvas id="drawingCanvas" width="600" height="400"></canvas>
+
+<script>
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let circleSize = 50;
+    let circleColor = '#ff6600';
+
+    // Отрисовка круга по центру холста
+    function drawCircle() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, circleSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = circleColor;
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    // Обработка слайдера
+    const sizeSlider = document.getElementById('sizeSlider');
+    const sizeValue = document.getElementById('sizeValue');
+
+    sizeSlider.addEventListener('input', function() {
+        circleSize = parseInt(this.value);
+        sizeValue.textContent = circleSize;
+        drawCircle();
+    });
+
+    // Обработка кнопки смены цвета
+    const colorButton = document.getElementById('colorButton');
+
+    colorButton.addEventListener('click', function() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        circleColor = color;
+        drawCircle();
+    });
+
+    // Первоначальная отрисовка
+    drawCircle();
+</script>
+
+</body>
+</html>  min-height: 360px;
   display: grid;
   place-items: center;
   transition: background-color var(--trans-dur), color var(--trans-dur);
